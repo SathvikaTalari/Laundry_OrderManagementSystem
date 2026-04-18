@@ -1,0 +1,2814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>LaundryOS</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────── */
+    :root {
+      --bg: #F7F3EE;
+      --bg2: #EDE8E1;
+      --white: #FFFFFF;
+      --teal: #1A5F5A;
+      --teal2: #24807A;
+      --teal-light: #E8F4F3;
+      --gold: #C9963A;
+      --gold-light: #FDF5E8;
+      --text: #1C1C1C;
+      --text2: #4A4A4A;
+      --muted: #8A8A8A;
+      --border: #DDD8D0;
+      --border2: #C8C2B8;
+      --red: #C0392B;
+      --red-light: #FDECEA;
+      --green: #1A7A4A;
+      --green-light: #E8F5EE;
+      --yellow: #B8860B;
+      --yellow-light: #FDF8E1;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+      --r: 12px;
+      --r-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5
+    }
+
+    /* ─── SCROLLBAR ─────────────────────────────────────── */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg2)
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border2);
+      border-radius: 3px
+    }
+
+    /* ─── AUTH SCREEN ───────────────────────────────────── */
+    #auth-screen {
+      min-height: 100vh;
+      display: flex;
+      background: linear-gradient(135deg, #1A5F5A 0%, #0D3D3A 50%, #0A2E2B 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #auth-screen::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .auth-left {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-brand {
+      max-width: 400px
+    }
+
+    .auth-logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px
+    }
+
+    .auth-logo-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--gold), #E8B44A);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 8px 24px rgba(201, 150, 58, 0.4);
+    }
+
+    .auth-logo-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: #fff;
+      font-weight: 700
+    }
+
+    .auth-logo-sub {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.1em;
+      margin-top: 2px
+    }
+
+    .auth-tagline {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 16px
+    }
+
+    .auth-tagline em {
+      color: var(--gold);
+      font-style: normal
+    }
+
+    .auth-desc {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.7;
+      max-width: 340px
+    }
+
+    .auth-features {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px
+    }
+
+    .auth-feat {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 14px
+    }
+
+    .auth-feat-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .auth-right {
+      width: 480px;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 50px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-form-wrap {
+      width: 100%
+    }
+
+    .form-tab-row {
+      display: flex;
+      gap: 4px;
+      background: var(--bg2);
+      padding: 4px;
+      border-radius: 10px;
+      margin-bottom: 32px
+    }
+
+    .form-tab {
+      flex: 1;
+      padding: 9px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 13px;
+      border-radius: 7px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+
+    .form-tab.active {
+      background: var(--white);
+      color: var(--teal);
+      box-shadow: var(--shadow)
+    }
+
+    .auth-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      margin-bottom: 6px
+    }
+
+    .auth-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 28px
+    }
+
+    .form-group {
+      margin-bottom: 16px
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text2);
+      margin-bottom: 6px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(26, 95, 90, 0.1);
+      background: var(--white);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: var(--r-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      font-family: 'Outfit', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--teal), var(--teal2));
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(26, 95, 90, 0.35);
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(26, 95, 90, 0.45)
+    }
+
+    .btn-primary:active {
+      transform: none
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), #E8B44A);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(201, 150, 58, 0.35)
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-1px)
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--teal);
+      border: 1.5px solid var(--teal)
+    }
+
+    .btn-outline:hover {
+      background: var(--teal-light)
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text2);
+      border: 1.5px solid var(--border)
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--border2);
+      background: var(--bg2)
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--red);
+      border: 1.5px solid var(--red)
+    }
+
+    .btn-danger:hover {
+      background: var(--red-light)
+    }
+
+    .btn-sm {
+      padding: 7px 14px;
+      font-size: 12px
+    }
+
+    .btn-xs {
+      padding: 4px 10px;
+      font-size: 11px
+    }
+
+    .btn-wide {
+      width: 100%;
+      justify-content: center
+    }
+
+    .err-msg {
+      background: var(--red-light);
+      border: 1px solid rgba(192, 57, 43, 0.2);
+      color: var(--red);
+      padding: 10px 14px;
+      border-radius: var(--r-sm);
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .err-msg.show {
+      display: block
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border)
+    }
+
+    .staff-hint {
+      background: var(--teal-light);
+      border: 1px solid rgba(26, 95, 90, 0.2);
+      border-radius: var(--r-sm);
+      padding: 12px;
+      font-size: 12px;
+      color: var(--teal);
+      margin-bottom: 20px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      line-height: 1.5;
+    }
+
+    /* ─── APP SHELL ─────────────────────────────────────── */
+    #app-screen {
+      display: none;
+      min-height: 100vh
+    }
+
+    /* TOPBAR */
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-right: 32px
+    }
+
+    .topbar-icon {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--teal), var(--teal2));
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .topbar-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--teal)
+    }
+
+    .topbar-nav {
+      display: flex;
+      gap: 2px;
+      flex: 1
+    }
+
+    .nav-btn {
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text2);
+      transition: all 0.15s;
+      border: none;
+      background: none;
+      font-family: 'Outfit', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn:hover {
+      background: var(--bg2);
+      color: var(--text)
+    }
+
+    .nav-btn.active {
+      background: var(--teal-light);
+      color: var(--teal);
+      font-weight: 600
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: var(--bg2);
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .ua-staff {
+      background: linear-gradient(135deg, var(--teal), var(--teal2))
+    }
+
+    .ua-customer {
+      background: linear-gradient(135deg, var(--gold), #E8B44A)
+    }
+
+    .role-badge {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .rb-staff {
+      background: var(--teal-light);
+      color: var(--teal)
+    }
+
+    .rb-customer {
+      background: var(--gold-light);
+      color: var(--gold)
+    }
+
+    /* CONTENT */
+    .content-area {
+      padding: 28px;
+      max-width: 1300px;
+      margin: 0 auto
+    }
+
+    .page {
+      display: none
+    }
+
+    .page.active {
+      display: block
+    }
+
+    /* ─── SECTION HEADER ─────────────────────────────────── */
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 12px;
+      flex-wrap: wrap
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      color: var(--text)
+    }
+
+    .section-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 3px
+    }
+
+    .section-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-shrink: 0
+    }
+
+    /* ─── STAT CARDS ─────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg)
+    }
+
+    .stat-card-accent {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: var(--r) var(--r) 0 0
+    }
+
+    .acc-teal {
+      background: linear-gradient(90deg, var(--teal), var(--teal2))
+    }
+
+    .acc-gold {
+      background: linear-gradient(90deg, var(--gold), #E8B44A)
+    }
+
+    .acc-green {
+      background: linear-gradient(90deg, var(--green), #22A05A)
+    }
+
+    .acc-red {
+      background: linear-gradient(90deg, var(--red), #E74C3C)
+    }
+
+    .acc-blue {
+      background: linear-gradient(90deg, #2980B9, #3498DB)
+    }
+
+    .stat-icon {
+      font-size: 24px;
+      margin-bottom: 10px;
+      display: block
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em
+    }
+
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      color: var(--text);
+      margin: 6px 0 4px;
+      line-height: 1
+    }
+
+    .stat-meta {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    /* ─── STATUS PIPELINE ─────────────────────────────────── */
+    .pipeline {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .pipeline-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 16px
+    }
+
+    .pipeline-row {
+      display: flex;
+      align-items: center;
+      gap: 0
+    }
+
+    .pipe-item {
+      flex: 1;
+      text-align: center;
+      position: relative
+    }
+
+    .pipe-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 60%;
+      right: -10%;
+      height: 2px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    .pipe-item.done:not(:last-child)::after {
+      background: var(--teal)
+    }
+
+    .pipe-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin: 0 auto 8px;
+      position: relative;
+      z-index: 1;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      transition: all 0.3s;
+    }
+
+    .pipe-item.active .pipe-dot {
+      border-color: var(--teal);
+      background: var(--teal-light);
+      transform: scale(1.15)
+    }
+
+    .pipe-item.done .pipe-dot {
+      border-color: var(--teal);
+      background: var(--teal);
+      color: #fff
+    }
+
+    .pipe-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted)
+    }
+
+    .pipe-item.active .pipe-label,
+    .pipe-item.done .pipe-label {
+      color: var(--teal);
+      font-weight: 600
+    }
+
+    .pipe-count {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--text);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* ─── CARDS / PANELS ─────────────────────────────────── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      box-shadow: var(--shadow)
+    }
+
+    .card-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text)
+    }
+
+    .card-body {
+      padding: 20px
+    }
+
+    /* ─── TABLE ──────────────────────────────────────────── */
+    .table-wrap {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+      box-shadow: var(--shadow)
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    thead tr {
+      background: var(--bg2)
+    }
+
+    th {
+      padding: 11px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      white-space: nowrap
+    }
+
+    tbody tr {
+      border-top: 1px solid var(--border);
+      transition: background 0.1s
+    }
+
+    tbody tr:hover {
+      background: var(--bg)
+    }
+
+    td {
+      padding: 13px 16px;
+      font-size: 13.5px;
+      vertical-align: middle
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px
+    }
+
+    .teal-text {
+      color: var(--teal);
+      font-weight: 600
+    }
+
+    .gold-text {
+      color: var(--gold);
+      font-weight: 600
+    }
+
+    /* ─── STATUS BADGES ──────────────────────────────────── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .b-received {
+      background: #E8F0FE;
+      color: #1A56A0
+    }
+
+    .b-processing {
+      background: var(--yellow-light);
+      color: var(--yellow)
+    }
+
+    .b-ready {
+      background: var(--green-light);
+      color: var(--green)
+    }
+
+    .b-delivered {
+      background: var(--bg2);
+      color: var(--muted)
+    }
+
+    /* ─── ORDER FORM ─────────────────────────────────────── */
+    .order-form-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+      align-items: start
+    }
+
+    .service-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 0
+    }
+
+    .service-card {
+      border: 2px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      background: var(--bg);
+    }
+
+    .service-card:hover {
+      border-color: var(--teal);
+      background: var(--teal-light)
+    }
+
+    .service-card.selected {
+      border-color: var(--teal);
+      background: var(--teal-light)
+    }
+
+    .service-card-icon {
+      font-size: 22px;
+      margin-bottom: 6px
+    }
+
+    .service-card-name {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 2px
+    }
+
+    .service-card-days {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .service-card-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+
+    .sb-express {
+      background: var(--yellow-light);
+      color: var(--yellow)
+    }
+
+    .sb-same {
+      background: var(--red-light);
+      color: var(--red)
+    }
+
+    .sb-std {
+      background: var(--green-light);
+      color: var(--green)
+    }
+
+    /* Garment builder */
+    .garment-builder {
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .garment-row {
+      display: grid;
+      grid-template-columns: 2fr 80px 100px 36px;
+      gap: 8px;
+      align-items: center;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 10px 12px;
+    }
+
+    .garment-select,
+    .garment-qty,
+    .garment-price {
+      border: none;
+      background: transparent;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      width: 100%;
+    }
+
+    .garment-select option {
+      background: var(--white)
+    }
+
+    .garment-del {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .garment-del:hover {
+      background: var(--red-light);
+      border-color: var(--red);
+      color: var(--red)
+    }
+
+    .garment-header {
+      display: grid;
+      grid-template-columns: 2fr 80px 100px 36px;
+      gap: 8px;
+      padding: 0 12px;
+      margin-bottom: 4px;
+    }
+
+    .gh {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em
+    }
+
+    /* Bill panel */
+    .bill-panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 80px;
+    }
+
+    .bill-panel-head {
+      padding: 18px 20px;
+      background: linear-gradient(135deg, var(--teal), var(--teal2));
+      border-radius: var(--r) var(--r) 0 0;
+    }
+
+    .bill-panel-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: #fff
+    }
+
+    .bill-panel-sub {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.65);
+      margin-top: 2px
+    }
+
+    .bill-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px
+    }
+
+    .bill-line:last-child {
+      border-bottom: none
+    }
+
+    .bill-label {
+      color: var(--text2)
+    }
+
+    .bill-val {
+      font-weight: 600
+    }
+
+    .bill-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0 0;
+      margin-top: 4px;
+      border-top: 2px solid var(--teal);
+    }
+
+    .bill-total-label {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--teal)
+    }
+
+    .bill-total-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: var(--teal)
+    }
+
+    .est-delivery-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold-light);
+      border: 1px solid rgba(201, 150, 58, 0.25);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-top: 14px;
+    }
+
+    .est-icon {
+      font-size: 20px
+    }
+
+    .est-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em
+    }
+
+    .est-date {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text)
+    }
+
+    /* ─── ORDER DETAIL MODAL ─────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-overlay.show {
+      display: flex
+    }
+
+    .modal {
+      background: var(--white);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-top {
+      padding: 24px 24px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, var(--teal), var(--teal2));
+      border-radius: 16px 16px 0 0;
+    }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: #fff
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.25)
+    }
+
+    .modal-body {
+      padding: 24px
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .detail-row:last-child {
+      border-bottom: none
+    }
+
+    .detail-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em
+    }
+
+    .detail-val {
+      font-size: 14px;
+      font-weight: 500;
+      text-align: right
+    }
+
+    .garment-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 12px;
+      background: var(--bg);
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .modal-footer {
+      padding: 0 24px 24px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap
+    }
+
+    /* Status update row */
+    .status-update-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 14px;
+      background: var(--bg);
+      border-radius: 8px;
+      margin-top: 12px
+    }
+
+    .status-opt {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      color: var(--text2);
+      transition: all 0.15s;
+    }
+
+    .status-opt.s-received {
+      border-color: #1A56A0;
+      color: #1A56A0;
+      background: #E8F0FE
+    }
+
+    .status-opt.s-processing {
+      border-color: var(--yellow);
+      color: var(--yellow);
+      background: var(--yellow-light)
+    }
+
+    .status-opt.s-ready {
+      border-color: var(--green);
+      color: var(--green);
+      background: var(--green-light)
+    }
+
+    .status-opt.s-delivered {
+      border-color: var(--muted);
+      color: var(--muted);
+      background: var(--bg2)
+    }
+
+    .status-opt.sel {
+      box-shadow: 0 0 0 3px rgba(26, 95, 90, 0.2)
+    }
+
+    /* ─── TRACKING STRIP ─────────────────────────────────── */
+    .tracking-strip {
+      background: linear-gradient(135deg, var(--teal), #0D3D3A);
+      border-radius: var(--r);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .tracking-strip-left {
+      color: #fff
+    }
+
+    .tracking-strip-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      margin-bottom: 4px
+    }
+
+    .tracking-strip-sub {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.65)
+    }
+
+    .tracking-input-row {
+      display: flex;
+      gap: 8px
+    }
+
+    .tracking-input {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      outline: none;
+      width: 220px;
+    }
+
+    .tracking-input::placeholder {
+      color: rgba(255, 255, 255, 0.5)
+    }
+
+    .tracking-input:focus {
+      background: rgba(255, 255, 255, 0.25)
+    }
+
+    /* ─── CUSTOMER ORDER CARD ─────────────────────────────── */
+    .order-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .order-card:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-lg)
+    }
+
+    .order-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px
+    }
+
+    .order-card-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--teal)
+    }
+
+    .order-card-date {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .order-card-progress {
+      margin: 12px 0
+    }
+
+    .progress-bar-wrap {
+      height: 4px;
+      background: var(--bg2);
+      border-radius: 2px;
+      margin-top: 8px
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--teal), var(--teal2));
+      transition: width 0.5s ease
+    }
+
+    .order-card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border)
+    }
+
+    .order-card-items {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .order-card-amount {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--gold)
+    }
+
+    /* ETA chip in order card */
+    .eta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--gold-light);
+      border: 1px solid rgba(201, 150, 58, 0.2);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 11px;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* ─── EMPTY STATE ─────────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted)
+    }
+
+    .empty-icon {
+      font-size: 52px;
+      margin-bottom: 16px;
+      display: block
+    }
+
+    .empty-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--text);
+      margin-bottom: 8px
+    }
+
+    .empty-sub {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 300px;
+      margin: 0 auto 20px
+    }
+
+    /* ─── FILTERS ─────────────────────────────────────────── */
+    .filters-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .filter-pill {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      color: var(--text2);
+      transition: all 0.15s;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--teal2);
+      color: var(--teal)
+    }
+
+    .filter-pill.active {
+      background: var(--teal);
+      color: #fff;
+      border-color: var(--teal)
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      flex: 1;
+      max-width: 260px;
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      background: transparent;
+      width: 100%
+    }
+
+    .search-icon {
+      color: var(--muted);
+      font-size: 14px;
+      flex-shrink: 0
+    }
+
+    /* ─── TOAST ───────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      box-shadow: var(--shadow-lg);
+      font-size: 13px;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 320px;
+    }
+
+    .toast.show {
+      transform: none;
+      opacity: 1
+    }
+
+    .toast.t-success {
+      border-left: 3px solid var(--green)
+    }
+
+    .toast.t-error {
+      border-left: 3px solid var(--red)
+    }
+
+    .toast.t-info {
+      border-left: 3px solid var(--teal)
+    }
+
+    /* ─── SPINNER ─────────────────────────────────────────── */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2.5px solid rgba(0, 0, 0, 0.1);
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0
+    }
+
+    .spinner-white {
+      border-color: rgba(255, 255, 255, 0.3);
+      border-top-color: #fff
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    /* ─── ANIM ────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    .fade-up {
+      animation: fadeUp 0.35s ease both
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────────────── */
+    @media(max-width:1100px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .order-form-layout {
+        grid-template-columns: 1fr
+      }
+    }
+
+    @media(max-width:700px) {
+      .stats-grid {
+        grid-template-columns: 1fr
+      }
+
+      .auth-left {
+        display: none
+      }
+
+      .auth-right {
+        width: 100%
+      }
+
+      .service-cards {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════ AUTH SCREEN ══════════════════════════════ -->
+  <div id="auth-screen">
+    <div class="auth-left">
+      <div class="auth-brand fade-up">
+        <div class="auth-logo-wrap">
+          <div class="auth-logo-icon">🧺</div>
+          <div>
+            <div class="auth-logo-name">LaundryOS</div>
+            <div class="auth-logo-sub">v2.0 · Premium</div>
+          </div>
+        </div>
+        <div class="auth-tagline">Your clothes,<br><em>perfectly</em> managed.</div>
+        <div class="auth-desc">A complete dry cleaning management system with real-time tracking, smart billing, and
+          role-based dashboards.</div>
+        <div class="auth-features">
+          <div class="auth-feat">
+            <div class="auth-feat-icon">🔐</div>Secure role-based access for staff & customers
+          </div>
+          <div class="auth-feat">
+            <div class="auth-feat-icon">📦</div>Real-time order tracking with status updates
+          </div>
+          <div class="auth-feat">
+            <div class="auth-feat-icon">📅</div>Estimated delivery with service type selection
+          </div>
+          <div class="auth-feat">
+            <div class="auth-feat-icon">📊</div>Powerful dashboards with revenue analytics
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-form-wrap">
+        <div class="form-tab-row">
+          <div class="form-tab active" onclick="switchAuthTab('login')">Sign In</div>
+          <div class="form-tab" onclick="switchAuthTab('register')">Register</div>
+        </div>
+
+        <!-- LOGIN -->
+        <div id="login-form">
+          <div class="auth-title">Welcome back</div>
+          <div class="auth-sub">Sign in to your account to continue</div>
+          <div class="staff-hint">
+            <span>💼</span>
+            <div><strong>Staff demo:</strong> staff@laundry.com / staff123</div>
+          </div>
+          <div class="err-msg" id="login-err"></div>
+          <div class="form-group"><label>Email Address</label><input type="email" id="l-email"
+              placeholder="you@example.com" autocomplete="email" /></div>
+          <div class="form-group"><label>Password</label><input type="password" id="l-pass" placeholder="••••••••"
+              autocomplete="current-password" /></div>
+          <button class="btn btn-primary" id="login-btn" onclick="doLogin()">Sign In →</button>
+        </div>
+
+        <!-- REGISTER -->
+        <div id="register-form" style="display:none">
+          <div class="auth-title">Create account</div>
+          <div class="auth-sub">Register as a new customer</div>
+          <div class="err-msg" id="reg-err"></div>
+          <div class="form-grid-2">
+            <div class="form-group"><label>Full Name</label><input type="text" id="r-name" placeholder="Ravi Kumar" />
+            </div>
+            <div class="form-group"><label>Phone</label><input type="tel" id="r-phone" placeholder="9876543210" /></div>
+          </div>
+          <div class="form-group"><label>Email Address</label><input type="email" id="r-email"
+              placeholder="you@example.com" /></div>
+          <div class="form-group"><label>Password</label><input type="password" id="r-pass"
+              placeholder="Min 6 characters" /></div>
+          <button class="btn btn-primary" id="reg-btn" onclick="doRegister()">Create Account →</button>
+        </div>
+
+        <div class="divider">or</div>
+        <div style="font-size:12px;color:var(--muted);text-align:center">
+          Backend URL: <input type="text" id="api-url" value="http://localhost:8000"
+            style="width:180px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;margin-left:4px;background:var(--bg)" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ APP SCREEN ═══════════════════════════════ -->
+  <div id="app-screen">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-icon">🧺</div>
+        <div class="topbar-name">LaundryOS</div>
+      </div>
+      <div class="topbar-nav" id="topbar-nav"><!-- injected --></div>
+      <div class="topbar-right">
+        <div class="user-chip" id="user-chip">
+          <div class="user-avatar ua-staff" id="user-avatar">?</div>
+          <div>
+            <div style="font-weight:600;font-size:13px" id="user-name">User</div>
+            <div class="role-badge rb-staff" id="user-role-badge">Staff</div>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="doLogout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content-area">
+
+      <!-- ══ STAFF PAGES ══ -->
+
+      <!-- Staff Dashboard -->
+      <div class="page" id="page-sdash">
+        <div class="section-head">
+          <div>
+            <div class="section-title">Good morning 👋</div>
+            <div class="section-sub">Here's what's happening at the store today</div>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-ghost btn-sm" onclick="loadStaffDash()">↻ Refresh</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-accent acc-teal"></div><span class="stat-icon">📦</span>
+            <div class="stat-label">Total Orders</div>
+            <div class="stat-value" id="sd-total">—</div>
+            <div class="stat-meta">All time</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-accent acc-gold"></div><span class="stat-icon">₹</span>
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-value" id="sd-revenue">—</div>
+            <div class="stat-meta">All time</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-accent acc-green"></div><span class="stat-icon">🌅</span>
+            <div class="stat-label">Today Orders</div>
+            <div class="stat-value" id="sd-today">—</div>
+            <div class="stat-meta" id="sd-today-rev">₹0 today</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-accent acc-blue"></div><span class="stat-icon">👥</span>
+            <div class="stat-label">Customers</div>
+            <div class="stat-value" id="sd-customers">—</div>
+            <div class="stat-meta">Registered</div>
+          </div>
+        </div>
+
+        <div class="pipeline">
+          <div class="pipeline-title">Order Pipeline</div>
+          <div class="pipeline-row">
+            <div class="pipe-item" id="pipe-received">
+              <div class="pipe-dot">📥</div><span class="pipe-count" id="ps-received">—</span>
+              <div class="pipe-label">Received</div>
+            </div>
+            <div class="pipe-item" id="pipe-processing">
+              <div class="pipe-dot">⚙️</div><span class="pipe-count" id="ps-processing">—</span>
+              <div class="pipe-label">Processing</div>
+            </div>
+            <div class="pipe-item" id="pipe-ready">
+              <div class="pipe-dot">✅</div><span class="pipe-count" id="ps-ready">—</span>
+              <div class="pipe-label">Ready</div>
+            </div>
+            <div class="pipe-item" id="pipe-delivered">
+              <div class="pipe-dot">📫</div><span class="pipe-count" id="ps-delivered">—</span>
+              <div class="pipe-label">Delivered</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-title">Recent Orders</span><button class="btn btn-outline btn-sm"
+              onclick="showPage('sorders')">View All</button></div>
+          <div style="overflow:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Phone</th>
+                  <th>Service</th>
+                  <th>Amount</th>
+                  <th>Est. Delivery</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="sd-recent-body">
+                <tr>
+                  <td colspan="8" style="text-align:center;padding:30px">
+                    <div class="spinner"></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Staff: All Orders -->
+      <div class="page" id="page-sorders">
+        <div class="section-head">
+          <div>
+            <div class="section-title">All Orders</div>
+            <div class="section-sub">Manage and update order statuses</div>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-ghost btn-sm" onclick="loadStaffOrders()">↻ Refresh</button>
+          </div>
+        </div>
+        <div class="filters-row">
+          <div class="filter-pill active" data-sf="ALL" onclick="setStaffFilter(this,'ALL')">All</div>
+          <div class="filter-pill" data-sf="RECEIVED" onclick="setStaffFilter(this,'RECEIVED')">Received</div>
+          <div class="filter-pill" data-sf="PROCESSING" onclick="setStaffFilter(this,'PROCESSING')">Processing</div>
+          <div class="filter-pill" data-sf="READY" onclick="setStaffFilter(this,'READY')">Ready</div>
+          <div class="filter-pill" data-sf="DELIVERED" onclick="setStaffFilter(this,'DELIVERED')">Delivered</div>
+          <div class="search-box"><span class="search-icon">🔍</span><input id="staff-search"
+              placeholder="Search name, phone, order ID…" oninput="debouncedStaffSearch()" /></div>
+        </div>
+        <div class="table-wrap" style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Items</th>
+                <th>Service</th>
+                <th>Amount</th>
+                <th>Est. Delivery</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="sorders-body">
+              <tr>
+                <td colspan="9" style="text-align:center;padding:30px">
+                  <div class="spinner"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Staff: New Order -->
+      <div class="page" id="page-snew">
+        <div class="section-head">
+          <div>
+            <div class="section-title">New Order</div>
+            <div class="section-sub">Create a laundry order for a customer</div>
+          </div>
+        </div>
+        <div id="new-order-success" style="display:none;margin-bottom:20px">
+          <div
+            style="background:var(--green-light);border:1px solid rgba(26,122,74,0.25);border-radius:var(--r);padding:20px 24px;display:flex;gap:16px;align-items:flex-start">
+            <div style="font-size:32px">🎉</div>
+            <div>
+              <div style="font-weight:700;font-size:15px;margin-bottom:4px">Order Created!</div>
+              <div class="mono teal-text" id="nos-id" style="font-size:18px;margin-bottom:4px">—</div>
+              <div style="font-size:13px;color:var(--text2)" id="nos-meta">—</div>
+            </div>
+          </div>
+        </div>
+        <div class="order-form-layout">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <!-- Customer -->
+            <div class="card">
+              <div class="card-head"><span class="card-title">👤 Customer Details</span></div>
+              <div class="card-body">
+                <div class="form-grid-2">
+                  <div class="form-group"><label>Full Name *</label><input type="text" id="on-name"
+                      placeholder="e.g. Priya Sharma" /></div>
+                  <div class="form-group"><label>Phone Number *</label><input type="tel" id="on-phone"
+                      placeholder="e.g. 9876543210" /></div>
+                </div>
+              </div>
+            </div>
+            <!-- Service -->
+            <div class="card">
+              <div class="card-head"><span class="card-title">🚀 Service Type</span></div>
+              <div class="card-body">
+                <div class="service-cards">
+                  <div class="service-card selected" data-svc="STANDARD" onclick="selectService(this)">
+                    <div class="service-card-icon">🐢</div>
+                    <div class="service-card-name">Standard</div>
+                    <div class="service-card-days">3 business days</div>
+                    <div class="service-card-badge sb-std">Economy</div>
+                  </div>
+                  <div class="service-card" data-svc="EXPRESS" onclick="selectService(this)">
+                    <div class="service-card-icon">⚡</div>
+                    <div class="service-card-name">Express</div>
+                    <div class="service-card-days">Next day</div>
+                    <div class="service-card-badge sb-express">+20%</div>
+                  </div>
+                  <div class="service-card" data-svc="SAME_DAY" onclick="selectService(this)">
+                    <div class="service-card-icon">🔥</div>
+                    <div class="service-card-name">Same Day</div>
+                    <div class="service-card-days">By 8 PM today</div>
+                    <div class="service-card-badge sb-same">Priority</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Garments -->
+            <div class="card">
+              <div class="card-head"><span class="card-title">👕 Garments</span><button class="btn btn-outline btn-sm"
+                  onclick="addGarmentRow()">+ Add Item</button></div>
+              <div class="card-body">
+                <div class="garment-header"><span class="gh">Garment</span><span class="gh">Qty</span><span
+                    class="gh">₹/Item</span><span></span></div>
+                <div class="garment-builder" id="garment-builder"></div>
+                <div style="margin-top:12px;text-align:center">
+                  <button class="btn btn-ghost btn-sm" onclick="addGarmentRow()">+ Add another item</button>
+                </div>
+              </div>
+            </div>
+            <!-- Notes -->
+            <div class="card">
+              <div class="card-head"><span class="card-title">📝 Special Instructions</span></div>
+              <div class="card-body">
+                <div class="form-group" style="margin-bottom:0"><textarea id="on-notes"
+                    placeholder="Any special care instructions, stain locations, etc…"></textarea></div>
+              </div>
+            </div>
+          </div>
+          <!-- Bill Panel -->
+          <div class="bill-panel">
+            <div class="bill-panel-head">
+              <div class="bill-panel-title">Order Summary</div>
+              <div class="bill-panel-sub">Live billing preview</div>
+            </div>
+            <div style="padding:18px 20px">
+              <div id="bill-lines">
+                <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">Add garments to see bill
+                </div>
+              </div>
+              <div class="bill-total-row">
+                <div class="bill-total-label">Total Amount</div>
+                <div class="bill-total-val" id="bill-total-val">₹0</div>
+              </div>
+              <div class="est-delivery-chip">
+                <div class="est-icon">📅</div>
+                <div>
+                  <div class="est-label">Est. Delivery</div>
+                  <div class="est-date" id="est-del-date">Select service type</div>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-wide" id="create-order-btn" onclick="submitOrder()"
+                style="margin-top:16px">🧾 Create Order</button>
+              <button class="btn btn-ghost btn-wide" onclick="resetOrderForm()" style="margin-top:8px">Reset
+                Form</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ CUSTOMER PAGES ══ -->
+
+      <!-- Customer Dashboard -->
+      <div class="page" id="page-cdash">
+        <div class="section-head">
+          <div>
+            <div class="section-title" id="cdash-greeting">My Orders</div>
+            <div class="section-sub">Track your laundry orders in real time</div>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary btn-sm" onclick="showPage('cnew')">+ New Order</button>
+            <button class="btn btn-ghost btn-sm" onclick="loadCustomerDash()">↻ Refresh</button>
+          </div>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="stat-card">
+            <div class="stat-card-accent acc-teal"></div><span class="stat-icon">📋</span>
+            <div class="stat-label">Total Orders</div>
+            <div class="stat-value" id="cd-total">—</div>
+            <div class="stat-meta">Lifetime</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-accent acc-gold"></div><span class="stat-icon">💰</span>
+            <div class="stat-label">Total Spent</div>
+            <div class="stat-value" id="cd-spent">—</div>
+            <div class="stat-meta">All time</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-accent acc-green"></div><span class="stat-icon">⏳</span>
+            <div class="stat-label">Active Orders</div>
+            <div class="stat-value" id="cd-active">—</div>
+            <div class="stat-meta">In progress</div>
+          </div>
+        </div>
+
+        <div class="section-head" style="margin-bottom:16px">
+          <div class="section-title" style="font-size:20px">Recent Orders</div>
+          <button class="btn btn-outline btn-sm" onclick="showPage('corders')">View All</button>
+        </div>
+        <div id="cd-order-cards">
+          <div style="text-align:center;padding:40px">
+            <div class="spinner" style="width:32px;height:32px;border-width:3px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer: My Orders -->
+      <div class="page" id="page-corders">
+        <div class="section-head">
+          <div>
+            <div class="section-title">My Orders</div>
+            <div class="section-sub">All your laundry orders</div>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary btn-sm" onclick="showPage('cnew')">+ New Order</button>
+            <button class="btn btn-ghost btn-sm" onclick="loadCustomerOrders()">↻ Refresh</button>
+          </div>
+        </div>
+        <div class="filters-row">
+          <div class="filter-pill active" data-cf="ALL" onclick="setCustFilter(this,'ALL')">All</div>
+          <div class="filter-pill" data-cf="RECEIVED" onclick="setCustFilter(this,'RECEIVED')">Received</div>
+          <div class="filter-pill" data-cf="PROCESSING" onclick="setCustFilter(this,'PROCESSING')">Processing</div>
+          <div class="filter-pill" data-cf="READY" onclick="setCustFilter(this,'READY')">Ready for Pickup</div>
+          <div class="filter-pill" data-cf="DELIVERED" onclick="setCustFilter(this,'DELIVERED')">Delivered</div>
+        </div>
+        <div id="corders-cards"></div>
+      </div>
+
+      <!-- Customer: New Order -->
+      <div class="page" id="page-cnew">
+        <div class="section-head">
+          <div>
+            <div class="section-title">Place New Order</div>
+            <div class="section-sub">Drop off your garments — we'll handle the rest</div>
+          </div>
+        </div>
+        <div id="cnew-success" style="display:none;margin-bottom:20px">
+          <div
+            style="background:var(--green-light);border:1px solid rgba(26,122,74,0.25);border-radius:var(--r);padding:20px 24px;display:flex;gap:16px;align-items:flex-start">
+            <div style="font-size:32px">🎉</div>
+            <div>
+              <div style="font-weight:700;font-size:15px;margin-bottom:4px">Order Placed Successfully!</div>
+              <div class="mono teal-text" id="cnos-id" style="font-size:18px;margin-bottom:4px">—</div>
+              <div style="font-size:13px;color:var(--text2)" id="cnos-meta">—</div>
+              <button class="btn btn-outline btn-sm" style="margin-top:10px" onclick="showPage('corders')">View My
+                Orders →</button>
+            </div>
+          </div>
+        </div>
+        <div class="order-form-layout">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="card">
+              <div class="card-head"><span class="card-title">👤 Your Details</span></div>
+              <div class="card-body">
+                <div class="form-grid-2">
+                  <div class="form-group"><label>Full Name *</label><input type="text" id="cn-name"
+                      placeholder="Your full name" /></div>
+                  <div class="form-group"><label>Phone Number *</label><input type="tel" id="cn-phone"
+                      placeholder="Your phone number" /></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="card-title">🚀 Service Type</span></div>
+              <div class="card-body">
+                <div class="service-cards">
+                  <div class="service-card selected" data-csvc="STANDARD" onclick="selectCustService(this)">
+                    <div class="service-card-icon">🐢</div>
+                    <div class="service-card-name">Standard</div>
+                    <div class="service-card-days">3 business days</div>
+                    <div class="service-card-badge sb-std">Economy</div>
+                  </div>
+                  <div class="service-card" data-csvc="EXPRESS" onclick="selectCustService(this)">
+                    <div class="service-card-icon">⚡</div>
+                    <div class="service-card-name">Express</div>
+                    <div class="service-card-days">Next day</div>
+                    <div class="service-card-badge sb-express">+20%</div>
+                  </div>
+                  <div class="service-card" data-csvc="SAME_DAY" onclick="selectCustService(this)">
+                    <div class="service-card-icon">🔥</div>
+                    <div class="service-card-name">Same Day</div>
+                    <div class="service-card-days">By 8 PM today</div>
+                    <div class="service-card-badge sb-same">Priority</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="card-title">👕 Garments</span><button class="btn btn-outline btn-sm"
+                  onclick="addCustGarmentRow()">+ Add Item</button></div>
+              <div class="card-body">
+                <div class="garment-header"><span class="gh">Garment</span><span class="gh">Qty</span><span
+                    class="gh">₹/Item</span><span></span></div>
+                <div class="garment-builder" id="cust-garment-builder"></div>
+                <div style="margin-top:12px;text-align:center"><button class="btn btn-ghost btn-sm"
+                    onclick="addCustGarmentRow()">+ Add another item</button></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="card-title">📝 Special Instructions</span></div>
+              <div class="card-body">
+                <div class="form-group" style="margin-bottom:0"><textarea id="cn-notes"
+                    placeholder="Stain locations, delicate fabrics, special care instructions…"></textarea></div>
+              </div>
+            </div>
+          </div>
+          <div class="bill-panel">
+            <div class="bill-panel-head">
+              <div class="bill-panel-title">Order Summary</div>
+              <div class="bill-panel-sub">Live billing preview</div>
+            </div>
+            <div style="padding:18px 20px">
+              <div id="cbill-lines">
+                <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">Add garments to see bill
+                </div>
+              </div>
+              <div class="bill-total-row">
+                <div class="bill-total-label">Total Amount</div>
+                <div class="bill-total-val" id="cbill-total-val">₹0</div>
+              </div>
+              <div class="est-delivery-chip">
+                <div class="est-icon">📅</div>
+                <div>
+                  <div class="est-label">Est. Delivery</div>
+                  <div class="est-date" id="cest-del-date">Select service type</div>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-wide" id="cust-order-btn" onclick="submitCustOrder()"
+                style="margin-top:16px">🧾 Place Order</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ORDER DETAIL MODAL -->
+  <div class="modal-overlay" id="order-modal">
+    <div class="modal">
+      <div class="modal-top">
+        <div>
+          <div class="modal-title" id="modal-title">Order Details</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px" id="modal-date">—</div>
+        </div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer" id="modal-footer"></div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"><span id="toast-icon">✓</span><span id="toast-msg">Done</span></div>
+
+  <script>
+    // ─── STATE ───────────────────────────────────────────────────────────────────
+    let AUTH = null; // { token, role, name, email, user_id }
+    let PRICES = {};
+    let staffFilter = 'ALL', custFilter = 'ALL';
+    let staffGarRows = [], custGarRows = [];
+    let staffSvc = 'STANDARD', custSvc = 'STANDARD';
+    let currentOrder = null;
+    let searchTimer;
+
+    const DELIVERY_DAYS = { STANDARD: 3, EXPRESS: 1, SAME_DAY: 0 };
+
+    // ─── UTILS ───────────────────────────────────────────────────────────────────
+    const BASE = () => (document.getElementById('api-url').value || 'http://localhost:8000').replace(/\/$/, '');
+
+    async function api(path, method = 'GET', body = null) {
+      const h = { 'Content-Type': 'application/json' };
+      if (AUTH?.token) h['Authorization'] = 'Bearer ' + AUTH.token;
+      const r = await fetch(BASE() + path, { method, headers: h, body: body ? JSON.stringify(body) : null });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.detail || 'Request failed');
+      return d;
+    }
+
+    function fmtMoney(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
+
+    function fmtDate(iso, opts) {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleDateString('en-IN', opts || { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function fmtDateTime(iso) {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function estDeliveryDate(svc) {
+      const days = DELIVERY_DAYS[svc] ?? 3;
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      if (days === 0) { d.setHours(20, 0, 0, 0); return 'Today by 8:00 PM'; }
+      return d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+    }
+
+    function statusBadge(s) {
+      const map = { RECEIVED: 'b-received', PROCESSING: 'b-processing', READY: 'b-ready', DELIVERED: 'b-delivered' };
+      const icons = { RECEIVED: '📥', PROCESSING: '⚙️', READY: '✅', DELIVERED: '📫' };
+      return `<span class="badge ${map[s] || ''}">${icons[s] || ''} ${s}</span>`;
+    }
+
+    function statusProgress(s) {
+      const map = { RECEIVED: 25, PROCESSING: 55, READY: 80, DELIVERED: 100 };
+      return map[s] || 0;
+    }
+
+    let toastTimer;
+    function showToast(msg, type = 'info') {
+      const t = document.getElementById('toast');
+      const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+      document.getElementById('toast-icon').textContent = icons[type] || 'ℹ️';
+      document.getElementById('toast-msg').textContent = msg;
+      t.className = 'toast show t-' + type;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    // ─── AUTH ─────────────────────────────────────────────────────────────────────
+    function switchAuthTab(tab) {
+      document.querySelectorAll('.form-tab').forEach((t, i) => t.classList.toggle('active', (i === 0) === (tab === 'login')));
+      document.getElementById('login-form').style.display = tab === 'login' ? '' : 'none';
+      document.getElementById('register-form').style.display = tab === 'register' ? '' : 'none';
+    }
+
+    async function doLogin() {
+      const btn = document.getElementById('login-btn');
+      const err = document.getElementById('login-err');
+      err.classList.remove('show');
+      btn.innerHTML = '<div class="spinner spinner-white"></div> Signing in…';
+      btn.disabled = true;
+      try {
+        const data = await api('/auth/login', 'POST', {
+          email: document.getElementById('l-email').value.trim(),
+          password: document.getElementById('l-pass').value
+        });
+        AUTH = data;
+        localStorage.setItem('laundry_auth', JSON.stringify(data));
+        bootApp();
+      } catch (e) {
+        err.textContent = e.message;
+        err.classList.add('show');
+      }
+      btn.innerHTML = 'Sign In →';
+      btn.disabled = false;
+    }
+
+    async function doRegister() {
+      const btn = document.getElementById('reg-btn');
+      const err = document.getElementById('reg-err');
+      err.classList.remove('show');
+      const pass = document.getElementById('r-pass').value;
+      if (pass.length < 6) { err.textContent = 'Password must be at least 6 characters'; err.classList.add('show'); return; }
+      btn.innerHTML = '<div class="spinner spinner-white"></div> Creating…';
+      btn.disabled = true;
+      try {
+        const data = await api('/auth/register', 'POST', {
+          name: document.getElementById('r-name').value.trim(),
+          email: document.getElementById('r-email').value.trim(),
+          phone: document.getElementById('r-phone').value.trim(),
+          password: pass
+        });
+        AUTH = data;
+        localStorage.setItem('laundry_auth', JSON.stringify(data));
+        bootApp();
+      } catch (e) {
+        err.textContent = e.message;
+        err.classList.add('show');
+      }
+      btn.innerHTML = 'Create Account →';
+      btn.disabled = false;
+    }
+
+    async function doLogout() {
+      try { await api('/auth/logout', 'POST'); } catch { }
+      AUTH = null;
+      localStorage.removeItem('laundry_auth');
+      document.getElementById('auth-screen').style.display = 'flex';
+      document.getElementById('app-screen').style.display = 'none';
+      document.getElementById('l-email').value = '';
+      document.getElementById('l-pass').value = '';
+      document.getElementById('login-err').classList.remove('show');
+    }
+
+    // ─── BOOT ─────────────────────────────────────────────────────────────────────
+    function bootApp() {
+      document.getElementById('auth-screen').style.display = 'none';
+      document.getElementById('app-screen').style.display = 'block';
+
+      // User chip
+      const initials = AUTH.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+      document.getElementById('user-name').textContent = AUTH.name;
+      document.getElementById('user-avatar').textContent = initials;
+      const isStaff = AUTH.role === 'staff';
+      document.getElementById('user-avatar').className = 'user-avatar ' + (isStaff ? 'ua-staff' : 'ua-customer');
+      document.getElementById('user-role-badge').textContent = isStaff ? 'Staff' : 'Customer';
+      document.getElementById('user-role-badge').className = 'role-badge ' + (isStaff ? 'rb-staff' : 'rb-customer');
+
+      // Nav
+      const nav = document.getElementById('topbar-nav');
+      if (isStaff) {
+        nav.innerHTML = `
+      <button class="nav-btn active" data-page="sdash" onclick="showPage('sdash',this)">📊 Dashboard</button>
+      <button class="nav-btn" data-page="sorders" onclick="showPage('sorders',this)">📋 Orders</button>
+      <button class="nav-btn" data-page="snew" onclick="showPage('snew',this)">➕ New Order</button>
+    `;
+        // Pre-fill greeting
+        const h = new Date().getHours();
+        const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+        document.getElementById('sd-recent-body').innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px"><div class="spinner"></div></td></tr>';
+        loadPrices().then(() => { initStaffForm(); loadStaffDash(); });
+        showPage('sdash');
+      } else {
+        nav.innerHTML = `
+      <button class="nav-btn active" data-page="cdash" onclick="showPage('cdash',this)">🏠 Dashboard</button>
+      <button class="nav-btn" data-page="corders" onclick="showPage('corders',this)">📋 My Orders</button>
+      <button class="nav-btn" data-page="cnew" onclick="showPage('cnew',this)">➕ New Order</button>
+    `;
+        document.getElementById('cdash-greeting').textContent = 'Hello, ' + AUTH.name.split(' ')[0] + ' 👋';
+        loadPrices().then(() => { initCustForm(); loadCustomerDash(); });
+        showPage('cdash');
+      }
+    }
+
+    function showPage(id, btn) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + id)?.classList.add('active');
+      if (btn) {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      } else {
+        document.querySelectorAll('.nav-btn').forEach(b => {
+          b.classList.toggle('active', b.dataset.page === id);
+        });
+      }
+      const loads = { sdash: loadStaffDash, sorders: loadStaffOrders, cdash: loadCustomerDash, corders: loadCustomerOrders };
+      if (loads[id]) loads[id]();
+    }
+
+    // ─── PRICES ──────────────────────────────────────────────────────────────────
+    async function loadPrices() {
+      try { PRICES = await api('/garments/prices'); } catch { }
+    }
+
+    // ─── GARMENT FORM (STAFF) ─────────────────────────────────────────────────────
+    function initStaffForm() {
+      staffGarRows = [];
+      document.getElementById('garment-builder').innerHTML = '';
+      addGarmentRow();
+    }
+
+    function addGarmentRow() {
+      const id = 's_' + Date.now();
+      staffGarRows.push(id);
+      const opts = Object.keys(PRICES).map(g => `<option value="${g}">${g}</option>`).join('');
+      const row = document.createElement('div');
+      row.className = 'garment-row';
+      row.id = 'gr_' + id;
+      row.innerHTML = `
+    <select class="garment-select" id="gs_${id}" onchange="onStaffGarmentChange('${id}')">
+      <option value="">Select garment…</option>${opts}
+    </select>
+    <input class="garment-qty" type="number" min="1" value="1" id="gq_${id}" oninput="updateStaffBill()"/>
+    <input class="garment-price" type="number" min="0" step="0.5" id="gp_${id}" placeholder="Price" oninput="updateStaffBill()"/>
+    <button class="garment-del" onclick="removeStaffRow('${id}')">✕</button>
+  `;
+      document.getElementById('garment-builder').appendChild(row);
+    }
+
+    function onStaffGarmentChange(id) {
+      const sel = document.getElementById('gs_' + id).value;
+      if (PRICES[sel]) document.getElementById('gp_' + id).value = PRICES[sel];
+      updateStaffBill();
+    }
+
+    function removeStaffRow(id) {
+      staffGarRows = staffGarRows.filter(r => r !== id);
+      document.getElementById('gr_' + id)?.remove();
+      updateStaffBill();
+    }
+
+    function selectService(el) {
+      document.querySelectorAll('[data-svc]').forEach(e => e.classList.remove('selected'));
+      el.classList.add('selected');
+      staffSvc = el.dataset.svc;
+      document.getElementById('est-del-date').textContent = estDeliveryDate(staffSvc);
+      updateStaffBill();
+    }
+
+    function updateStaffBill() {
+      let total = 0; const lines = [];
+      staffGarRows.forEach(id => {
+        const name = document.getElementById('gs_' + id)?.value;
+        const qty = parseInt(document.getElementById('gq_' + id)?.value) || 0;
+        const price = parseFloat(document.getElementById('gp_' + id)?.value) || 0;
+        if (name && qty && price) { const sub = qty * price; total += sub; lines.push({ name, qty, price, sub }); }
+      });
+      const bl = document.getElementById('bill-lines');
+      if (!lines.length) { bl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">Add garments to see bill</div>'; }
+      else {
+        bl.innerHTML = lines.map(l => `
+      <div class="bill-line"><span class="bill-label">${l.qty}× ${l.name}</span><span class="bill-val">${fmtMoney(l.sub)}</span></div>
+    `).join('');
+      }
+      document.getElementById('bill-total-val').textContent = fmtMoney(total);
+      document.getElementById('est-del-date').textContent = estDeliveryDate(staffSvc);
+    }
+
+    async function submitOrder() {
+      const name = document.getElementById('on-name').value.trim();
+      const phone = document.getElementById('on-phone').value.trim();
+      if (!name || !phone) { showToast('Name and phone are required', 'error'); return; }
+      const garments = [];
+      staffGarRows.forEach(id => {
+        const name = document.getElementById('gs_' + id)?.value;
+        const qty = parseInt(document.getElementById('gq_' + id)?.value);
+        const price = parseFloat(document.getElementById('gp_' + id)?.value);
+        if (name && qty > 0) garments.push({ name, quantity: qty, price_per_item: price || undefined });
+      });
+      if (!garments.length) { showToast('Add at least one garment', 'error'); return; }
+      const btn = document.getElementById('create-order-btn');
+      btn.innerHTML = '<div class="spinner spinner-white"></div> Creating…';
+      btn.disabled = true;
+      try {
+        const r = await api('/orders', 'POST', { customer_name: name, phone, garments, service_type: staffSvc, notes: document.getElementById('on-notes').value });
+        const el = document.getElementById('new-order-success');
+        document.getElementById('nos-id').textContent = r.order_id;
+        document.getElementById('nos-meta').textContent = `Total: ${fmtMoney(r.total_amount)} · Est. Delivery: ${fmtDate(r.estimated_delivery)}`;
+        el.style.display = 'block';
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        showToast('Order ' + r.order_id + ' created!', 'success');
+        resetOrderForm();
+      } catch (e) { showToast(e.message, 'error'); }
+      btn.innerHTML = '🧾 Create Order';
+      btn.disabled = false;
+    }
+
+    function resetOrderForm() {
+      document.getElementById('on-name').value = '';
+      document.getElementById('on-phone').value = '';
+      document.getElementById('on-notes').value = '';
+      staffGarRows = [];
+      document.getElementById('garment-builder').innerHTML = '';
+      addGarmentRow();
+      updateStaffBill();
+    }
+
+    // ─── GARMENT FORM (CUSTOMER) ──────────────────────────────────────────────────
+    function initCustForm() {
+      custGarRows = [];
+      document.getElementById('cust-garment-builder').innerHTML = '';
+      addCustGarmentRow();
+      // Pre-fill name/phone from auth
+      document.getElementById('cn-name').value = AUTH.name || '';
+    }
+
+    function addCustGarmentRow() {
+      const id = 'c_' + Date.now();
+      custGarRows.push(id);
+      const opts = Object.keys(PRICES).map(g => `<option value="${g}">${g}</option>`).join('');
+      const row = document.createElement('div');
+      row.className = 'garment-row';
+      row.id = 'cr_' + id;
+      row.innerHTML = `
+    <select class="garment-select" id="cgs_${id}" onchange="onCustGarmentChange('${id}')">
+      <option value="">Select garment…</option>${opts}
+    </select>
+    <input class="garment-qty" type="number" min="1" value="1" id="cgq_${id}" oninput="updateCustBill()"/>
+    <input class="garment-price" type="number" min="0" step="0.5" id="cgp_${id}" placeholder="Price" oninput="updateCustBill()"/>
+    <button class="garment-del" onclick="removeCustRow('${id}')">✕</button>
+  `;
+      document.getElementById('cust-garment-builder').appendChild(row);
+    }
+
+    function onCustGarmentChange(id) {
+      const sel = document.getElementById('cgs_' + id).value;
+      if (PRICES[sel]) document.getElementById('cgp_' + id).value = PRICES[sel];
+      updateCustBill();
+    }
+
+    function removeCustRow(id) {
+      custGarRows = custGarRows.filter(r => r !== id);
+      document.getElementById('cr_' + id)?.remove();
+      updateCustBill();
+    }
+
+    function selectCustService(el) {
+      document.querySelectorAll('[data-csvc]').forEach(e => e.classList.remove('selected'));
+      el.classList.add('selected');
+      custSvc = el.dataset.csvc;
+      document.getElementById('cest-del-date').textContent = estDeliveryDate(custSvc);
+      updateCustBill();
+    }
+
+    function updateCustBill() {
+      let total = 0; const lines = [];
+      custGarRows.forEach(id => {
+        const name = document.getElementById('cgs_' + id)?.value;
+        const qty = parseInt(document.getElementById('cgq_' + id)?.value) || 0;
+        const price = parseFloat(document.getElementById('cgp_' + id)?.value) || 0;
+        if (name && qty && price) { const sub = qty * price; total += sub; lines.push({ name, qty, price, sub }); }
+      });
+      const bl = document.getElementById('cbill-lines');
+      if (!lines.length) bl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">Add garments to see bill</div>';
+      else bl.innerHTML = lines.map(l => `<div class="bill-line"><span class="bill-label">${l.qty}× ${l.name}</span><span class="bill-val">${fmtMoney(l.sub)}</span></div>`).join('');
+      document.getElementById('cbill-total-val').textContent = fmtMoney(total);
+      document.getElementById('cest-del-date').textContent = estDeliveryDate(custSvc);
+    }
+
+    async function submitCustOrder() {
+      const name = document.getElementById('cn-name').value.trim();
+      const phone = document.getElementById('cn-phone').value.trim();
+      if (!name || !phone) { showToast('Name and phone are required', 'error'); return; }
+      const garments = [];
+      custGarRows.forEach(id => {
+        const n = document.getElementById('cgs_' + id)?.value;
+        const qty = parseInt(document.getElementById('cgq_' + id)?.value);
+        const price = parseFloat(document.getElementById('cgp_' + id)?.value);
+        if (n && qty > 0) garments.push({ name: n, quantity: qty, price_per_item: price || undefined });
+      });
+      if (!garments.length) { showToast('Add at least one garment', 'error'); return; }
+      const btn = document.getElementById('cust-order-btn');
+      btn.innerHTML = '<div class="spinner spinner-white"></div> Placing…';
+      btn.disabled = true;
+      try {
+        const r = await api('/orders', 'POST', { customer_name: name, phone, garments, service_type: custSvc, notes: document.getElementById('cn-notes').value });
+        document.getElementById('cnos-id').textContent = r.order_id;
+        document.getElementById('cnos-meta').textContent = `Total: ${fmtMoney(r.total_amount)} · Est. Delivery: ${fmtDate(r.estimated_delivery)}`;
+        document.getElementById('cnew-success').style.display = 'block';
+        showToast('Order placed!', 'success');
+        custGarRows = [];
+        document.getElementById('cust-garment-builder').innerHTML = '';
+        addCustGarmentRow();
+        updateCustBill();
+      } catch (e) { showToast(e.message, 'error'); }
+      btn.innerHTML = '🧾 Place Order';
+      btn.disabled = false;
+    }
+
+    // ─── STAFF DASHBOARD ─────────────────────────────────────────────────────────
+    async function loadStaffDash() {
+      try {
+        const d = await api('/dashboard/staff');
+        document.getElementById('sd-total').textContent = d.total_orders;
+        document.getElementById('sd-revenue').textContent = fmtMoney(d.total_revenue);
+        document.getElementById('sd-today').textContent = d.today_orders;
+        document.getElementById('sd-today-rev').textContent = fmtMoney(d.today_revenue) + ' today';
+        document.getElementById('sd-customers').textContent = d.total_customers;
+        // Pipeline
+        ['received', 'processing', 'ready', 'delivered'].forEach(s => {
+          document.getElementById('ps-' + s).textContent = d.orders_by_status[s.toUpperCase()] ?? 0;
+        });
+        renderStaffTable(document.getElementById('sd-recent-body'), d.recent_orders, true);
+      } catch (e) { showToast('Dashboard error: ' + e.message, 'error'); }
+    }
+
+    // ─── STAFF ORDERS ─────────────────────────────────────────────────────────────
+    function setStaffFilter(el, f) {
+      staffFilter = f;
+      document.querySelectorAll('[data-sf]').forEach(p => p.classList.toggle('active', p.dataset.sf === f));
+      loadStaffOrders();
+    }
+
+    function debouncedStaffSearch() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(loadStaffOrders, 350);
+    }
+
+    async function loadStaffOrders() {
+      const search = document.getElementById('staff-search')?.value || '';
+      const tbody = document.getElementById('sorders-body');
+      if (!tbody) return;
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px"><div class="spinner"></div></td></tr>';
+      try {
+        let url = '/orders?';
+        if (staffFilter !== 'ALL') url += 'status=' + staffFilter + '&';
+        if (search) url += 'search=' + encodeURIComponent(search);
+        const orders = await api(url);
+        renderStaffTable(tbody, orders, false);
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--red);padding:20px">⚠ ${e.message}</td></tr>`;
+      }
+    }
+
+    function renderStaffTable(tbody, orders, compact) {
+      if (!orders.length) {
+        tbody.innerHTML = `<tr><td colspan="${compact ? 8 : 9}"><div class="empty-state"><span class="empty-icon">📭</span><div class="empty-title">No orders found</div></div></td></tr>`;
+        return;
+      }
+      const cols = compact ? 8 : 9;
+      tbody.innerHTML = orders.map(o => `
+    <tr>
+      <td><span class="mono teal-text">${o.order_id}</span></td>
+      <td><strong>${o.customer_name}</strong></td>
+      <td><span class="mono" style="font-size:12px">${o.phone}</span></td>
+      ${!compact ? `<td style="color:var(--muted)">${o.garments.length} item(s)</td>` : ''}
+      <td><span style="font-size:12px;font-weight:600">${o.service_type}</span></td>
+      <td class="gold-text">${fmtMoney(o.total_amount)}</td>
+      <td style="font-size:12px;color:var(--text2)">${fmtDate(o.estimated_delivery)}</td>
+      <td>${statusBadge(o.status)}</td>
+      <td><button class="btn btn-ghost btn-xs" onclick="openOrder('${o.order_id}')">Details</button></td>
+    </tr>
+  `).join('');
+    }
+
+    // ─── CUSTOMER DASHBOARD ──────────────────────────────────────────────────────
+    async function loadCustomerDash() {
+      try {
+        const d = await api('/dashboard/customer');
+        document.getElementById('cd-total').textContent = d.total_orders;
+        document.getElementById('cd-spent').textContent = fmtMoney(d.total_spent);
+        document.getElementById('cd-active').textContent = d.active_orders;
+        renderOrderCards(document.getElementById('cd-order-cards'), d.recent_orders);
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    }
+
+    // ─── CUSTOMER ORDERS ─────────────────────────────────────────────────────────
+    function setCustFilter(el, f) {
+      custFilter = f;
+      document.querySelectorAll('[data-cf]').forEach(p => p.classList.toggle('active', p.dataset.cf === f));
+      loadCustomerOrders();
+    }
+
+    async function loadCustomerOrders() {
+      const wrap = document.getElementById('corders-cards');
+      if (!wrap) return;
+      wrap.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner" style="width:32px;height:32px;border-width:3px"></div></div>';
+      try {
+        let url = '/orders?';
+        if (custFilter !== 'ALL') url += 'status=' + custFilter;
+        const orders = await api(url);
+        renderOrderCards(wrap, orders);
+      } catch (e) {
+        wrap.innerHTML = `<div style="text-align:center;color:var(--red);padding:20px">⚠ ${e.message}</div>`;
+      }
+    }
+
+    function renderOrderCards(wrap, orders) {
+      if (!orders.length) {
+        wrap.innerHTML = `<div class="empty-state"><span class="empty-icon">👕</span><div class="empty-title">No orders yet</div><div class="empty-sub">Start by placing your first laundry order</div><button class="btn btn-primary" onclick="showPage('cnew')">Place an Order</button></div>`;
+        return;
+      }
+      wrap.innerHTML = orders.map(o => {
+        const prog = statusProgress(o.status);
+        const isReady = o.status === 'READY';
+        return `
+    <div class="order-card fade-up" onclick="openOrder('${o.order_id}')">
+      <div class="order-card-top">
+        <span class="order-card-id">${o.order_id}</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          ${statusBadge(o.status)}
+          ${isReady ? '<span style="background:#FFF3CD;color:#856404;font-size:11px;font-weight:700;padding:3px 8px;border-radius:10px;animation:pulse 1.5s infinite">🔔 Ready for pickup!</span>' : ''}
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:10px">${o.garments.map(g => g.quantity + '× ' + g.name).join(', ')}</div>
+      <div class="order-card-progress">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px">
+          <span>Order Progress</span><span>${prog}%</span>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${prog}%"></div></div>
+      </div>
+      <div class="order-card-bottom">
+        <div>
+          <div class="order-card-items">${o.garments.length} item(s) · ${o.service_type}</div>
+          ${o.estimated_delivery ? `<div class="eta-chip" style="margin-top:5px">📅 Est. ${fmtDate(o.estimated_delivery)}</div>` : ''}
+        </div>
+        <div class="order-card-amount">${fmtMoney(o.total_amount)}</div>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    // ─── ORDER MODAL ──────────────────────────────────────────────────────────────
+    async function openOrder(orderId) {
+      document.getElementById('order-modal').classList.add('show');
+      document.getElementById('modal-title').textContent = orderId;
+      document.getElementById('modal-date').textContent = 'Loading…';
+      document.getElementById('modal-body').innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner" style="width:28px;height:28px;border-width:3px"></div></div>';
+      document.getElementById('modal-footer').innerHTML = '';
+      try {
+        const o = await api('/orders/' + orderId);
+        currentOrder = o;
+        renderModal(o);
+      } catch (e) {
+        document.getElementById('modal-body').innerHTML = `<p style="color:var(--red)">⚠ ${e.message}</p>`;
+      }
+    }
+
+    function renderModal(o) {
+      document.getElementById('modal-date').textContent = 'Created ' + fmtDateTime(o.created_at);
+      const isStaff = AUTH?.role === 'staff';
+
+      const garmentLines = o.garments.map(g => `
+    <div class="garment-line">
+      <span>${g.quantity}× <strong>${g.name}</strong></span>
+      <span style="color:var(--muted)">₹${g.price_per_item}/item → <strong style="color:var(--green)">${fmtMoney(g.subtotal)}</strong></span>
+    </div>`).join('');
+
+      document.getElementById('modal-body').innerHTML = `
+    <div class="detail-row"><span class="detail-label">Customer</span><span class="detail-val">${o.customer_name}</span></div>
+    <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-val mono">${o.phone}</span></div>
+    <div class="detail-row"><span class="detail-label">Service</span><span class="detail-val">${o.service_type}</span></div>
+    <div class="detail-row"><span class="detail-label">Est. Delivery</span><span class="detail-val" style="color:var(--gold);font-weight:700">📅 ${fmtDate(o.estimated_delivery)}</span></div>
+    <div class="detail-row"><span class="detail-label">Status</span><span class="detail-val">${statusBadge(o.status)}</span></div>
+    ${o.notes ? `<div class="detail-row"><span class="detail-label">Notes</span><span class="detail-val" style="font-size:12px;color:var(--muted)">${o.notes}</span></div>` : ''}
+    <div style="margin:16px 0 8px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em">Garments</div>
+    ${garmentLines}
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:2px solid var(--teal)">
+      <span style="font-weight:700;font-size:14px;color:var(--teal)">Total Amount</span>
+      <span style="font-family:'Playfair Display',serif;font-size:28px;color:var(--gold)">${fmtMoney(o.total_amount)}</span>
+    </div>
+    ${isStaff ? `
+      <div style="margin-top:16px">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px">Update Status</div>
+        <div class="status-update-row">
+          ${['RECEIVED', 'PROCESSING', 'READY', 'DELIVERED'].map(s => `
+            <div class="status-opt s-${s.toLowerCase()} ${s === o.status ? 'sel' : ''}" data-sv="${s}" onclick="selectStatus(this)">${s}</div>
+          `).join('')}
+        </div>
+      </div>` : ''}
+  `;
+
+      const footer = document.getElementById('modal-footer');
+      footer.innerHTML = `<button class="btn btn-ghost" onclick="closeModal()">Close</button>`;
+      if (isStaff) {
+        footer.innerHTML += `<button class="btn btn-primary" onclick="saveStatus()">💾 Save Status</button>`;
+      }
+    }
+
+    function selectStatus(el) {
+      document.querySelectorAll('.status-opt').forEach(o => o.classList.remove('sel'));
+      el.classList.add('sel');
+    }
+
+    async function saveStatus() {
+      const sel = document.querySelector('.status-opt.sel');
+      if (!sel || !currentOrder) return;
+      const newStatus = sel.dataset.sv;
+      try {
+        await api('/orders/' + currentOrder.order_id + '/status', 'PATCH', { status: newStatus });
+        showToast('Status updated to ' + newStatus, 'success');
+        closeModal();
+        // Reload whichever is visible
+        if (document.getElementById('page-sdash').classList.contains('active')) loadStaffDash();
+        if (document.getElementById('page-sorders').classList.contains('active')) loadStaffOrders();
+      } catch (e) { showToast(e.message, 'error'); }
+    }
+
+    function closeModal() {
+      document.getElementById('order-modal').classList.remove('show');
+      currentOrder = null;
+    }
+
+    document.getElementById('order-modal').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
+    });
+
+    // Enter key support
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        if (document.getElementById('login-form').style.display !== 'none' && document.getElementById('auth-screen').style.display !== 'none') doLogin();
+      }
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ─── INIT ────────────────────────────────────────────────────────────────────
+    (function init() {
+      // Try restore session
+      const saved = localStorage.getItem('laundry_auth');
+      if (saved) {
+        try {
+          AUTH = JSON.parse(saved);
+          // Verify token still valid
+          fetch(BASE() + '/auth/me', { headers: { 'Authorization': 'Bearer ' + AUTH.token } })
+            .then(r => r.ok ? bootApp() : doLogout())
+            .catch(() => { });
+          return;
+        } catch { }
+      }
+      document.getElementById('auth-screen').style.display = 'flex';
+    })();
+  </script>
+</body>
+
+</html>
