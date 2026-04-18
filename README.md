@@ -1,5 +1,3 @@
-# Laundry_OrderManagementSystem
-
 # 🧺 LaundryOS — AI-First Laundry Order Management System
 
 > A full-stack dry cleaning management platform with role-based authentication, real-time order tracking, estimated delivery, and dual dashboards for staff and customers.
